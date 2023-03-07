@@ -13,8 +13,7 @@ game.loader.load((res) => {
   level.open();
   // Listen for frame updates
   game.ticker.add((delta) => {
-    let adjustedDelta = (delta / 60) * 144;
-    game.stage.update(adjustedDelta);
+    game.stage.update(delta);
     sceneResize();
     letterbox.update();
     keyboard.update();
