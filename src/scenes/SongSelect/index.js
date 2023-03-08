@@ -40,7 +40,7 @@ scene.initialize = () => {
   // Song Select
 
   scene.addChild(songs);
-  songs.x = config.CANVAS_WIDTH / 2 - 280;
+  songs.x = 200;
   songs.y = config.CANVAS_HEIGHT / 2;
   songs.select = [];
   songs.index = 0;
