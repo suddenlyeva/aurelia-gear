@@ -3,14 +3,14 @@ import game from '@/system/game';
 import resources from '@/system/resources';
 import letterbox from '@/system/letterbox';
 import sceneResize from '@/system/resize';
-import level from '@/scenes/level';
+import SongSelect from '@/scenes/SongSelect';
 
 require('@/system/textures');
 
 game.loader.load((res) => {
   resources.___load(res.resources);
   letterbox.create(resources.black.texture);
-  level.open();
+  SongSelect.open();
   // Listen for frame updates
   game.ticker.add((delta) => {
     game.stage.update(delta);

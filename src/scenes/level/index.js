@@ -2,23 +2,20 @@ import * as PIXI from 'pixi.js';
 import game from '@/system/game';
 import config from '@/system/config';
 import resources from '@/system/resources';
+import SongSelect from '@/scenes/SongSelect';
+import keyboard from 'pixi.js-keyboard';
 
-let scene = new PIXI.Container();
-scene.interactive = true;
-
-const noteTrack = new PIXI.Container();
-const notes = [];
-
-scene.open = () => {
-  game.renderer.plugins.interaction.cursorStyles.default = 'inherit';
-  if (!scene.initialized) {
-    scene.initialize();
-    scene.initialized = true;
-  }
+const Level = (trackData) => {
+  let scene = new PIXI.Container();
+  scene.interactive = true;
   game.stage = scene;
-};
 
-scene.initialize = () => {
+  const noteTrack = new PIXI.Container();
+  const notes = [];
+  const audio = new Audio(trackData.audio);
+  audio.volume = 0.2;
+  audio.play();
+
   //
   // Background
 
@@ -59,24 +56,30 @@ scene.initialize = () => {
   judgmentLine.y = config.CANVAS_HEIGHT / 2;
   scene.addChild(judgmentLine);
 
-  for (let i = 0; i < 400; i++) {
-    const isLeft = Math.random() < 0.5;
+  trackData.events.map((event) => {
+    const isLeft = event.type === 0;
 
     let note = new PIXI.TilingSprite(isLeft ? resources.blue.texture : resources.cyan.texture);
     note.anchor.set(0.5, 0.5);
     note.x = isLeft ? 200 : 280;
-    note.y = config.CANVAS_HEIGHT / 2 - 120 * i;
+    note.y = config.CANVAS_HEIGHT / 2 - event.time;
     note.height = 30;
     note.width = 60;
     notes.push(note);
     noteTrack.addChild(note);
-  }
+  });
 
   scene.addChild(noteTrack);
+
+  scene.update = (delta) => {
+    noteTrack.y += (delta * 1000) / 60;
+    if (keyboard.isKeyPressed('Escape')) {
+      audio.pause();
+      SongSelect.open();
+    }
+  };
+
+  return scene;
 };
 
-scene.update = (delta) => {
-  noteTrack.y += delta * 10;
-};
-
-export default scene;
+export default Level;
